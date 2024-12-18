@@ -1,0 +1,2143 @@
+
+
+---
+FILE_PATH: .github/workflows/main.yml
+```
+name: Ruby
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    strategy:
+      matrix:
+        ruby:
+          - '3.1.4'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Run the default task
+        run: bundle exec rake
+
+```
+
+
+---
+FILE_PATH: .gitignore
+```
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+faktur-0.1.0.gem
+
+# rspec failure tracking
+.rspec_status
+
+```
+
+
+---
+FILE_PATH: .rspec
+```
+--format documentation
+--color
+--require spec_helper
+
+```
+
+
+---
+FILE_PATH: .rubocop.yml
+```
+AllCops:
+  TargetRubyVersion: 3.0
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+```
+
+
+---
+FILE_PATH: .tool-versions
+```
+ruby 3.1.4
+
+```
+
+
+---
+FILE_PATH: CHANGELOG.md
+```
+## [Unreleased]
+
+## [0.1.0] - 2024-12-10
+
+- Initial release
+
+```
+
+
+---
+FILE_PATH: CODE_OF_CONDUCT.md
+```
+# Contributor Covenant Code of Conduct
+
+## Our Pledge
+
+We as members, contributors, and leaders pledge to make participation in our
+community a harassment-free experience for everyone, regardless of age, body
+size, visible or invisible disability, ethnicity, sex characteristics, gender
+identity and expression, level of experience, education, socio-economic status,
+nationality, personal appearance, race, caste, color, religion, or sexual
+identity and orientation.
+
+We pledge to act and interact in ways that contribute to an open, welcoming,
+diverse, inclusive, and healthy community.
+
+## Our Standards
+
+Examples of behavior that contributes to a positive environment for our
+community include:
+
+* Demonstrating empathy and kindness toward other people
+* Being respectful of differing opinions, viewpoints, and experiences
+* Giving and gracefully accepting constructive feedback
+* Accepting responsibility and apologizing to those affected by our mistakes,
+  and learning from the experience
+* Focusing on what is best not just for us as individuals, but for the overall
+  community
+
+Examples of unacceptable behavior include:
+
+* The use of sexualized language or imagery, and sexual attention or advances of
+  any kind
+* Trolling, insulting or derogatory comments, and personal or political attacks
+* Public or private harassment
+* Publishing others' private information, such as a physical or email address,
+  without their explicit permission
+* Other conduct which could reasonably be considered inappropriate in a
+  professional setting
+
+## Enforcement Responsibilities
+
+Community leaders are responsible for clarifying and enforcing our standards of
+acceptable behavior and will take appropriate and fair corrective action in
+response to any behavior that they deem inappropriate, threatening, offensive,
+or harmful.
+
+Community leaders have the right and responsibility to remove, edit, or reject
+comments, commits, code, wiki edits, issues, and other contributions that are
+not aligned to this Code of Conduct, and will communicate reasons for moderation
+decisions when appropriate.
+
+## Scope
+
+This Code of Conduct applies within all community spaces, and also applies when
+an individual is officially representing the community in public spaces.
+Examples of representing our community include using an official email address,
+posting via an official social media account, or acting as an appointed
+representative at an online or offline event.
+
+## Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported to the community leaders responsible for enforcement at
+[INSERT CONTACT METHOD].
+All complaints will be reviewed and investigated promptly and fairly.
+
+All community leaders are obligated to respect the privacy and security of the
+reporter of any incident.
+
+## Enforcement Guidelines
+
+Community leaders will follow these Community Impact Guidelines in determining
+the consequences for any action they deem in violation of this Code of Conduct:
+
+### 1. Correction
+
+**Community Impact**: Use of inappropriate language or other behavior deemed
+unprofessional or unwelcome in the community.
+
+**Consequence**: A private, written warning from community leaders, providing
+clarity around the nature of the violation and an explanation of why the
+behavior was inappropriate. A public apology may be requested.
+
+### 2. Warning
+
+**Community Impact**: A violation through a single incident or series of
+actions.
+
+**Consequence**: A warning with consequences for continued behavior. No
+interaction with the people involved, including unsolicited interaction with
+those enforcing the Code of Conduct, for a specified period of time. This
+includes avoiding interactions in community spaces as well as external channels
+like social media. Violating these terms may lead to a temporary or permanent
+ban.
+
+### 3. Temporary Ban
+
+**Community Impact**: A serious violation of community standards, including
+sustained inappropriate behavior.
+
+**Consequence**: A temporary ban from any sort of interaction or public
+communication with the community for a specified period of time. No public or
+private interaction with the people involved, including unsolicited interaction
+with those enforcing the Code of Conduct, is allowed during this period.
+Violating these terms may lead to a permanent ban.
+
+### 4. Permanent Ban
+
+**Community Impact**: Demonstrating a pattern of violation of community
+standards, including sustained inappropriate behavior, harassment of an
+individual, or aggression toward or disparagement of classes of individuals.
+
+**Consequence**: A permanent ban from any sort of public interaction within the
+community.
+
+## Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant][homepage],
+version 2.1, available at
+[https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1].
+
+Community Impact Guidelines were inspired by
+[Mozilla's code of conduct enforcement ladder][Mozilla CoC].
+
+For answers to common questions about this code of conduct, see the FAQ at
+[https://www.contributor-covenant.org/faq][FAQ]. Translations are available at
+[https://www.contributor-covenant.org/translations][translations].
+
+[homepage]: https://www.contributor-covenant.org
+[v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
+[Mozilla CoC]: https://github.com/mozilla/diversity
+[FAQ]: https://www.contributor-covenant.org/faq
+[translations]: https://www.contributor-covenant.org/translations
+
+```
+
+
+---
+FILE_PATH: Gemfile
+```
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Specify your gem's dependencies in faktur.gemspec
+gemspec
+
+gem "actionview", "~> 4.2", ">= 4.2.6"
+gem "prawn", "~> 2.1"
+gem "prawn-table", "~> 0.2.2"
+gem "rake", "~> 13.0"
+gem "rspec", "~> 3.0"
+gem "rubocop", "~> 1.21"
+
+```
+
+
+---
+FILE_PATH: Gemfile.lock
+```
+PATH
+  remote: .
+  specs:
+    faktur (0.1.0)
+      sqlite3 (~> 1.5)
+      thor (~> 1.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    actionview (4.2.11.3)
+      activesupport (= 4.2.11.3)
+      builder (~> 3.1)
+      erubis (~> 2.7.0)
+      rails-dom-testing (~> 1.0, >= 1.0.5)
+      rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    activesupport (4.2.11.3)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
+    ast (2.4.2)
+    bigdecimal (3.1.8)
+    builder (3.3.0)
+    concurrent-ruby (1.3.4)
+    crass (1.0.6)
+    diff-lcs (1.5.1)
+    erubis (2.7.0)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
+    json (2.9.0)
+    language_server-protocol (3.17.0.3)
+    loofah (2.23.1)
+      crass (~> 1.0.2)
+      nokogiri (>= 1.12.0)
+    matrix (0.4.2)
+    minitest (5.25.4)
+    nokogiri (1.17.2-aarch64-linux)
+      racc (~> 1.4)
+    nokogiri (1.17.2-arm-linux)
+      racc (~> 1.4)
+    nokogiri (1.17.2-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.17.2-x86-linux)
+      racc (~> 1.4)
+    nokogiri (1.17.2-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.17.2-x86_64-linux)
+      racc (~> 1.4)
+    parallel (1.26.3)
+    parser (3.3.6.0)
+      ast (~> 2.4.1)
+      racc
+    pdf-core (0.10.0)
+    prawn (2.5.0)
+      matrix (~> 0.4)
+      pdf-core (~> 0.10.0)
+      ttfunk (~> 1.8)
+    prawn-table (0.2.2)
+      prawn (>= 1.3.0, < 3.0.0)
+    racc (1.8.1)
+    rails-deprecated_sanitizer (1.0.4)
+      activesupport (>= 4.2.0.alpha)
+    rails-dom-testing (1.0.9)
+      activesupport (>= 4.2.0, < 5.0)
+      nokogiri (~> 1.6)
+      rails-deprecated_sanitizer (>= 1.0.1)
+    rails-html-sanitizer (1.6.2)
+      loofah (~> 2.21)
+      nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+    rainbow (3.1.1)
+    rake (13.2.1)
+    regexp_parser (2.9.3)
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.2)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.2)
+    rubocop (1.69.1)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
+      parallel (~> 1.10)
+      parser (>= 3.3.0.2)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 2.9.3, < 3.0)
+      rubocop-ast (>= 1.36.2, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 4.0)
+    rubocop-ast (1.36.2)
+      parser (>= 3.3.1.0)
+    ruby-progressbar (1.13.0)
+    sqlite3 (1.7.3-aarch64-linux)
+    sqlite3 (1.7.3-arm-linux)
+    sqlite3 (1.7.3-arm64-darwin)
+    sqlite3 (1.7.3-x86-linux)
+    sqlite3 (1.7.3-x86_64-darwin)
+    sqlite3 (1.7.3-x86_64-linux)
+    thor (1.3.2)
+    thread_safe (0.3.6)
+    ttfunk (1.8.0)
+      bigdecimal (~> 3.1)
+    tzinfo (1.2.11)
+      thread_safe (~> 0.1)
+    unicode-display_width (3.1.2)
+      unicode-emoji (~> 4.0, >= 4.0.4)
+    unicode-emoji (4.0.4)
+
+PLATFORMS
+  aarch64-linux
+  arm-linux
+  arm64-darwin
+  x86-linux
+  x86_64-darwin
+  x86_64-linux
+
+DEPENDENCIES
+  actionview (~> 4.2, >= 4.2.6)
+  faktur!
+  prawn (~> 2.1)
+  prawn-table (~> 0.2.2)
+  rake (~> 13.0)
+  rspec (~> 3.0)
+  rubocop (~> 1.21)
+
+BUNDLED WITH
+   2.5.23
+
+```
+
+
+---
+FILE_PATH: LICENSE.txt
+```
+The MIT License (MIT)
+
+Copyright (c) 2024 Vicente Santos
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+```
+
+
+---
+FILE_PATH: Makefile
+```
+GEMSPEC = faktur.gemspec
+GEM_NAME = faktur
+GEM_VERSION = 0.1.0
+RUBY_VERSION = 3.1.4
+
+clean:
+	@echo "Cleaning up old gem..."
+	rm -f $(GEM_NAME)-$(GEM_VERSION).gem
+
+build: clean
+	@echo "Building the gem..."
+	gem build $(GEMSPEC)
+
+install: build
+	@echo "Installing the gem..."
+	gem install ./$(GEM_NAME)-$(GEM_VERSION).gem
+
+uninstall:
+	@echo "Uninstalling the gem..."
+	gem uninstall $(GEM_NAME)
+
+reinstall: uninstall install
+	@echo "Reinstalled the gem successfully."
+
+test: install
+	@echo "Running faktur CLI..."
+	faktur --help
+
+rebuild: clean build reinstall
+	@echo "Gem has been cleaned, rebuilt, and reinstalled."
+
+```
+
+
+---
+FILE_PATH: README.md
+```
+# Faktur
+
+Faktur is a simple CLI tool to generate invoices.
+
+## Installation
+
+To install Faktur, follow these steps:
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/vicentedpsantos/faktur.git
+    ```
+2. Navigate to the project directory:
+    ```sh
+    cd faktur
+    ```
+3. Install the necessary dependencies:
+    ```sh
+    make install
+    ```
+
+4. To uninstall Faktur, run the following command:
+    ```sh
+    make uninstall
+    ```
+
+## Usage
+
+Faktur provides several commands to manage configurations and invoices. All flags are optional, and the user can run the commands without any flags.
+
+### Configuration Commands
+
+- **Create a new configuration:**
+    ```sh
+    faktur configurations create <NAME>
+    ```
+
+- **List all configurations:**
+    ```sh
+    faktur configurations list
+    ```
+
+- **Delete a configuration:**
+    ```sh
+    faktur configurations delete <ID>
+    ```
+
+- **Show a specific configuration:**
+    ```sh
+    faktur configurations show <NAME>
+    ```
+
+### Invoice Commands
+
+- **Create a new invoice:**
+    ```sh
+    faktur invoices create --number=<NUMBER>
+    ```
+
+- **List all invoices:**
+    ```sh
+    faktur invoices list
+    ```
+
+- **Delete an invoice:**
+    ```sh
+    faktur invoices delete <ID>
+    ```
+
+- **Print an invoice:**
+    ```sh
+    faktur invoices print <ID>
+    ```
+
+## Examples
+
+- Create a new configuration named "default":
+    ```sh
+    faktur configurations create default
+    ```
+
+- Create a new invoice with a specific number:
+    ```sh
+    faktur invoices create --number=12345
+    ```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+```
+
+
+---
+FILE_PATH: Rakefile
+```
+# frozen_string_literal: true
+
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
+
+RSpec::Core::RakeTask.new(:spec)
+
+require "rubocop/rake_task"
+
+RuboCop::RakeTask.new
+
+task default: %i[spec rubocop]
+
+```
+
+
+---
+FILE_PATH: bin/console
+```
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "faktur"
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+require "irb"
+IRB.start(__FILE__)
+
+```
+
+
+---
+FILE_PATH: bin/faktur
+```
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Make sure that the config directory exists
+require "fileutils"
+require "faktur"
+
+FileUtils.mkdir_p(Faktur::Database::DB_DIR)
+FileUtils.mkdir_p("#{Faktur::Database::DB_DIR}/exports")
+Faktur::CLI.start(ARGV)
+
+```
+
+
+---
+FILE_PATH: bin/setup
+```
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+set -vx
+
+bundle install
+
+# Do any other automated setup that you need to do here
+
+```
+
+
+---
+FILE_PATH: faktur.gemspec
+```
+# frozen_string_literal: true
+
+require_relative "lib/faktur/version"
+
+Gem::Specification.new do |spec|
+  spec.name = "faktur"
+  spec.version = Faktur::VERSION
+  spec.authors = ["Vicente Santos"]
+  spec.email = ["vicentedpsantos@gmail.com"]
+
+  spec.summary = "A CLI tool for generating and managing invoices."
+  spec.description = "Faktur simplifies invoice creation and management via the command line"
+  spec.homepage = "https://github.com/vicentedpsantos/faktur"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 3.0.0"
+
+  spec.metadata["allowed_push_host"] = ""
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "https://github.com/vicentedpsantos/faktur"
+  spec.metadata["changelog_uri"] = "https://github.com/vicentedpsantos/faktur/blob/main/CHANGELOG.md"
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  gemspec = File.basename(__FILE__)
+  spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
+    ls.readlines("\x0", chomp: true).reject do |f|
+      (f == gemspec) ||
+        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
+    end
+  end
+  spec.bindir = "bin"
+  spec.executables   = ["faktur"]
+  spec.require_paths = ["lib"]
+
+  spec.add_development_dependency "rspec", "~> 3.12"
+  spec.add_runtime_dependency "sqlite3", "~> 1.5"
+  spec.add_runtime_dependency "thor", "~> 1.2"
+
+  # Uncomment to register a new dependency of your gem
+  # spec.add_dependency "example-gem", "~> 1.0"
+
+  # For more information and examples about making a new gem, check out our
+  # guide at: https://bundler.io/guides/creating_gem.html
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur.rb
+```
+# frozen_string_literal: true
+
+require "thor"
+require "sqlite3"
+
+require_relative "faktur/version"
+require_relative "./faktur/commands/configurations"
+require_relative "./faktur/commands/invoices"
+
+module Faktur
+  # CLI class
+  class CLI < Thor
+    register(
+      Faktur::Commands::Configurations,
+      "configurations",
+      "configurations [action]",
+      "Type faktur configurations for help."
+    )
+
+    register(
+      Faktur::Commands::Invoices,
+      "invoices",
+      "invoices [action]",
+      "Type faktur invoices for help."
+    )
+
+    # desc "new AMOUNT CURRENCY", "Create a new invoice"
+    # def new(amount, currency)
+    #   puts "Running new command..."
+    #   puts "Amount: #{amount}"
+    #   puts "Currency: #{currency}"
+    # end
+    #
+    # desc "list", "List all invoices"
+    # def list
+    #   puts "Listing all invoices..."
+    # end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/commands/configurations.rb
+```
+# frozen_string_literal: true
+
+require "thor"
+require_relative "../data/configuration"
+
+module Faktur
+  module Commands
+    # Configurations commands class
+    class Configurations < Thor
+      CONFIGURATION_PROMPTS = {
+        client_name: "Enter the default client name: ",
+        client_address: "Enter the default client address: ",
+        client_vat: "Enter the default client VAT (optional): ",
+        beneficiary_name: "Enter the default beneficiary name: ",
+        beneficiary_tax_number: "Enter the default beneficiary tax registration number: ",
+        beneficiary_address: "Enter the default beneficiary address: ",
+        bank_account_beneficiary_name: "Enter the default bank account beneficiary name: ",
+        bank_account_address: "Enter the default bank account address: ",
+        bank_account_iban: "Enter the default bank account IBAN: ",
+        bank_account_swift: "Enter the default bank account SWIFT code: ",
+        bank_name: "Enter the default bank name: ",
+        payment_terms: "Enter the default terms of payment (Choose between: 10d, 20d, 30d, eof (end of month)): ",
+        service_description: "Enter the default description of services provided: ",
+        invoice_numbering: "Choose the default invoice numbering system (sequential or random): "
+      }.freeze
+
+      TABLE_NAME = "configs"
+
+      desc "create NAME", "Create a new invoice configuration"
+      def create(name)
+        config = { name: name }
+        CONFIGURATION_PROMPTS.each { |key, prompt| config[key] = ask(prompt) }
+        Faktur::Data::Configuration.create(config)
+      end
+
+      desc "list", "List all configurations"
+      def list
+        configs = Faktur::Data::Configuration.list
+
+        if configs.empty?
+          puts "No configurations found"
+          return
+        end
+
+        configs.each { |config| puts "ID #{config.id} · #{config.name}" }
+      end
+
+      desc "show NAME", "Show a configuration"
+      def show(name)
+        config = Faktur::Data::Configuration.find_by(name: name)
+
+        Faktur::Models::Configuration::ATTRS.each do |attr|
+          puts "#{attr.to_s.split("_").map(&:capitalize).join(" ")}: #{config.send(attr)}"
+        end
+      end
+
+      desc "delete ID", "Delete a configuration"
+      def delete(id)
+        Faktur::Data::Configuration.delete({ id: id })
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/commands/invoices.rb
+```
+# frozen_string_literal: true
+
+require "thor"
+require_relative "../database"
+require_relative "../models/invoice"
+require_relative "../models/configuration"
+require_relative "../views/invoice"
+
+INVOICE_PROMPTS = {
+  client_name: "Enter the client name: ",
+  amount: "Enter the amount: ",
+  currency: "Enter the currency (e.g. USD): "
+}.freeze
+
+module Faktur
+  module Commands
+    # Invoices commands class
+    class Invoices < Thor
+      desc "create", "Create a new invoice"
+      option :number, type: :numeric, required: false, desc: "Invoice number"
+      def create
+        input = {}
+        INVOICE_PROMPTS.each { |key, prompt| input[key] = ask(prompt) }
+        client_config = Faktur::Data::Configuration.find_by({ name: input[:client_name] })
+        invoice = Faktur::Models::Invoice.new(input, client_config: client_config, options: options)
+
+        Faktur::Data::Invoice.create(invoice.to_h)
+      end
+
+      desc "list", "List all invoices"
+      def list
+        invoices = Faktur::Data::Invoice.list
+
+        if invoices.empty?
+          puts "No invoices found"
+          return
+        end
+
+        invoices.each do |invoice|
+          puts "ID #{invoice.id} · ##{invoice.number} · #{invoice.client_name} · #{invoice.amount} #{invoice.currency} · #{invoice.created_at}"
+        end
+      end
+
+      desc "print", "Print an invoice"
+      option :format, type: :string, required: false, desc: "Output format (html, pdf)"
+      option :path, type: :string, required: false, desc: "Output path"
+      def print(id)
+        invoice = Faktur::Data::Invoice.find_by({ id: id })
+        client_config = Faktur::Data::Configuration.find_by({ id: invoice.client_id })
+        result = Faktur::Views::Invoice.new(invoice, client_config, options).process
+
+        puts "Invoice saved to #{result.path} as #{result.filename}"
+      end
+
+      desc "delete", "Delete an invoice"
+      def delete(id)
+        Faktur::Data::Invoice.delete({ id: id })
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/data/configuration.rb
+```
+# frozen_string_literal: true
+
+require "sqlite3"
+require_relative "../models/configuration"
+require_relative "../database"
+require_relative "../views/invoices/pdf"
+
+module Faktur
+  module Data
+    # Configuration data class
+    class Configuration
+      TABLE_NAME = "configs"
+
+      def self.create(data)
+        Faktur::Database.setup
+
+        Faktur::Database.create(TABLE_NAME, data) do
+          puts "Configuration saved successfully"
+        end
+      end
+
+      def self.list(where = {})
+        Faktur::Database.list(TABLE_NAME, where) do |results|
+          results.map { |row| Faktur::Models::Configuration.new(row, from_rows: true) }
+        end
+      end
+
+      def self.find_by(where = {})
+        list(where).first
+      end
+
+      def self.delete(where = {})
+        Faktur::Database.delete(TABLE_NAME, where)
+      end
+
+      def self.execute_update(db, table_name, id, data)
+        set_clause = data.keys.map { |key| "#{key} = ?" }.join(", ")
+        values = data.values << id
+
+        db.execute(
+          "UPDATE #{table_name} SET #{set_clause} WHERE id = ?",
+          values
+        )
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/data/invoice.rb
+```
+# frozen_string_literal: true
+
+require "sqlite3"
+require_relative "../models/invoice"
+require_relative "../database"
+
+module Faktur
+  module Data
+    # Invoice data class
+    class Invoice
+      TABLE_NAME = "invoices"
+
+      def self.create(data)
+        Faktur::Database.create(TABLE_NAME, data) do
+          puts "Invoice created successfully!"
+        end
+      end
+
+      def self.list(where = {})
+        Faktur::Database.list(TABLE_NAME, where) do |results|
+          results.map { |row| Faktur::Models::Invoice.new(row, from_rows: true) }
+        end
+      end
+
+      def self.find_by(where)
+        list(where).first
+      end
+
+      def self.delete(where = {})
+        Faktur::Database.delete(TABLE_NAME, where)
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/database.rb
+```
+# frozen_string_literal: true
+
+require "sqlite3"
+require_relative "./models/configuration"
+require_relative "sql_queries"
+
+module Faktur
+  # Database class
+  class Database
+    DB_DIR = File.expand_path("~/.config/faktur")
+    DB_NAME = "faktur.db"
+
+    def self.setup(db_dir = DB_DIR, setup_queries = SQLQueries::CREATE_TABLE_QUERIES)
+      FileUtils.mkdir_p(db_dir)
+      db = SQLite3::Database.new("#{db_dir}/#{DB_NAME}")
+      create_tables(db, setup_queries)
+
+      yield db if block_given?
+    end
+
+    def self.create(table_name, data)
+      process do |db|
+        insert_data(db, table_name, data)
+
+        yield if block_given?
+      end
+    end
+
+    def self.list(table_name, where = {})
+      where = build_where_clause(where)
+
+      process do |db|
+        results = db.execute("SELECT * FROM #{table_name}#{where}")
+
+        yield results if block_given?
+      end
+    end
+
+    def self.build_where_clause(where)
+      return "" if where.empty?
+
+      where.map { |k, v| "#{k} = '#{v}'" }.join(" AND ").prepend(" WHERE ")
+    end
+
+    def self.get_record(table_name, id)
+      process do |db|
+        db.execute("SELECT * FROM #{table_name} WHERE id = ?", id).first
+      end
+    end
+
+    def self.delete(table_name, where)
+      where = build_where_clause(where)
+      process do |db|
+        db.execute("DELETE FROM #{table_name}#{where}")
+      end
+    end
+
+    def self.execute_update(db, table_name, id, data)
+      set_clause = data.keys.map { |key| "#{key} = ?" }.join(", ")
+      values = data.values << id
+
+      db.execute(
+        "UPDATE #{table_name} SET #{set_clause} WHERE id = ?",
+        values
+      )
+    end
+
+    def self.process
+      setup do |db|
+        yield db
+      rescue SQLite3::SQLException => e
+        puts "Error: #{e.message}"
+      ensure
+        db.close
+      end
+    end
+
+    def self.create_tables(db, setup_queries)
+      setup_queries.each do |query|
+        db.execute(query)
+      end
+    end
+
+    def self.insert_data(db, table_name, data)
+      columns = data.keys.join(", ")
+      placeholders = (["?"] * data.keys.size).join(", ")
+      values = data.values
+
+      db.execute(
+        "INSERT INTO #{table_name} (#{columns}) VALUES (#{placeholders})",
+        values
+      )
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/models/configuration.rb
+```
+# frozen_string_literal: true
+
+require_relative "../data/invoice"
+
+module Faktur
+  module Models
+    # Configuration class
+    class Configuration
+      # Order matters because it's used to initialize the object from rows.
+      ATTRS = %i[
+        id name client_name client_address client_vat beneficiary_name
+        beneficiary_tax_number beneficiary_address bank_account_beneficiary_name
+        bank_account_address bank_account_iban bank_account_swift bank_name
+        payment_terms service_description invoice_numbering
+      ].freeze
+
+      attr_reader(*ATTRS)
+
+      def initialize(attributes, from_rows: false)
+        from_rows ? initialize_from_rows(attributes) : initialize_from_attributes(attributes)
+      end
+
+      def due_date
+        (Time.now + payment_term_days * 24 * 60 * 60).strftime("%d %b, %Y")
+      end
+
+      def next_invoice_number
+        case invoice_numbering
+        when "random"
+          generate_random_invoice_number
+        when "sequential"
+          generate_sequential_invoice_number
+        else
+          raise "Unknown invoice numbering type: #{invoice_numbering}"
+        end
+      end
+
+      private
+
+      def generate_random_invoice_number
+        (0...8).map { rand(65..90).chr }.join
+      end
+
+      def generate_sequential_invoice_number
+        last_invoice_number = fetch_last_invoice_number_for_client(id)
+        (last_invoice_number.to_i + 1).to_s
+      end
+
+      def fetch_last_invoice_number_for_client(client_id)
+        Faktur::Data::Invoice.list({ client_id: client_id }).last.number
+      rescue StandardError
+        "0"
+      end
+
+      def payment_term_days
+        case payment_terms
+        when "10d" then 10
+        when "20d" then 20
+        when "30d" then 30
+        when "eof" then (Date.civil(Date.today.year, Date.today.month, -1) - Date.today).to_i
+        else 0
+        end
+      end
+
+      def initialize_from_attributes(attributes)
+        ATTRS.each { |attr| instance_variable_set("@#{attr}", attributes[attr]) }
+      end
+
+      def initialize_from_rows(rows)
+        ATTRS.each_with_index do |attr, index|
+          instance_variable_set("@#{attr}", rows[index])
+        end
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/models/invoice.rb
+```
+# frozen_string_literal: true
+
+module Faktur
+  module Models
+    # Configuration class
+    class Invoice
+      ATTRS = %i[
+        id client_id client_name amount currency
+        invoice_date due_date number created_at
+      ].freeze
+
+      attr_reader(*ATTRS)
+
+      def initialize(attributes, client_config: nil, from_rows: false, options: {})
+        @options = options
+
+        from_rows ? initialize_from_rows(attributes) : initialize_from_input(attributes, client_config)
+      end
+
+      def to_h
+        {
+          client_name: @client_config.client_name,
+          amount: @attributes[:amount],
+          currency: @attributes[:currency],
+          invoice_date: Time.now.strftime("%Y-%m-%d"),
+          due_date: @client_config.due_date,
+          number: @options[:number] || @client_config.next_invoice_number,
+          client_id: @client_config.id
+        }
+      end
+
+      private
+
+      def initialize_from_rows(attributes)
+        attributes[7] = override_number(attributes)
+
+        ATTRS.each_with_index do |attr, index|
+          instance_variable_set("@#{attr}", attributes[index])
+        end
+      end
+
+      def initialize_from_input(attributes, client_config)
+        attributes[7] = override_number(attributes)
+
+        @attributes = attributes
+        @client_config = client_config
+      end
+
+      def override_number(attributes)
+        @options[:number] || attributes[7]
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/sql_queries.rb
+```
+# frozen_string_literal: true
+
+module SQLQueries
+  CREATE_TABLE_QUERIES = [
+    <<-SQL
+      CREATE TABLE IF NOT EXISTS configs (
+        id INTEGER PRIMARY KEY,
+        name TEXT UNIQUE,
+        client_name TEXT,
+        client_address TEXT,
+        client_vat TEXT,
+        beneficiary_name TEXT,
+        beneficiary_tax_number TEXT,
+        beneficiary_address TEXT,
+        bank_account_beneficiary_name TEXT,
+        bank_account_address TEXT,
+        bank_account_iban TEXT,
+        bank_account_swift TEXT,
+        bank_name TEXT,
+        payment_terms TEXT,
+        service_description TEXT,
+        invoice_numbering TEXT
+      );
+    SQL,
+    <<-SQL
+      CREATE TABLE IF NOT EXISTS invoices (
+        id INTEGER PRIMARY KEY,
+        client_id INTEGER,
+        client_name TEXT,
+        amount TEXT,
+        currency TEXT,
+        invoice_date TEXT,
+        due_date TEXT,
+        number TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (client_id) REFERENCES configs (id)
+      );
+    SQL
+  ].freeze
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/version.rb
+```
+# frozen_string_literal: true
+
+module Faktur
+  VERSION = "0.1.0"
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/views/invoice.rb
+```
+require_relative "./invoices/html"
+require_relative "./invoices/pdf"
+
+module Faktur
+  module Views
+    class Invoice
+      Result = Struct.new(:path, :filename)
+
+      def initialize(invoice, client_config, options)
+        @path = options[:path] || Dir.pwd
+        @format = options[:format] || "pdf"
+        @invoice = invoice
+        @client_config = client_config
+      end
+
+      def process
+        rendered =
+          case @format
+          when "html"
+            Faktur::Views::Invoices::HTML.new(@invoice, @client_config).render
+          when "pdf"
+            Faktur::Views::Invoices::PDF.new(@invoice, @client_config).render
+          else
+            raise "Invalid format"
+          end
+
+        write_file(rendered)
+      end
+
+      private
+
+      def write_file(rendered)
+        File.open("#{@path}/#{filename}", "wb") do |file|
+          file.write(rendered)
+        end
+
+        build_result
+      end
+
+      def build_result
+        Result.new(@path, filename)
+      end
+
+      def filename
+        "invoice.#{@format}"
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/views/invoices/html.rb
+```
+# frozen_string_literal: true
+
+require "action_view"
+
+module Faktur
+  module Views
+    module Invoices
+      # HTML class
+      class HTML
+        include ActionView::Helpers
+
+        def initialize(invoice, client_config)
+          @invoice = invoice
+          @client_config = client_config
+        end
+
+        def render
+          <<-HTML
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Invoice ##{@invoice.number}</title>
+            <style>
+              body { font-family: Arial, sans-serif; }
+              .invoice-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+              .invoice-box table { width: 100%; line-height: inherit; text-align: left; }
+              .invoice-box table td { padding: 5px; vertical-align: top; }
+              .invoice-box table tr td:nth-child(2) { text-align: right; }
+              .invoice-box table tr.top table td { padding-bottom: 20px; }
+              .invoice-box table tr.top table td.title { font-size: 45px; line-height: 45px; color: #333; }
+              .invoice-box table tr.information table td { padding-bottom: 40px; }
+              .invoice-box table tr.heading td { background: #eee; border-bottom: 1px solid #ddd; font-weight: bold; }
+              .invoice-box table tr.details td { padding-bottom: 20px; }
+              .invoice-box table tr.item td { border-bottom: 1px solid #eee; }
+              .invoice-box table tr.item.last td { border-bottom: none; }
+              .invoice-box table tr.total td:nth-child(2) { border-top: 2px solid #eee; font-weight: bold; }
+            </style>
+          </head>
+          <body>
+            <div class="invoice-box">
+              <table cellpadding="0" cellspacing="0">
+                <tr class="top">
+                  <td colspan="2">
+                    <table>
+                      <tr>
+                        <td class="title">
+                          <h1>Invoice</h1>
+                        </td>
+                        <td>
+                          Invoice #: #{@invoice.number}<br>
+                          Created: #{@invoice.created_at}<br>
+                          Due: #{@invoice.due_date}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr class="information">
+                  <td colspan="2">
+                    <table>
+                      <tr>
+                        <td>
+                          #{@client_config.client_name}<br>
+                          #{@client_config.client_address}<br>
+                          VAT: #{@client_config.client_vat}
+                        </td>
+                        <td>
+                          Name: #{@client_config.beneficiary_name}<br>
+                          Tax Number: #{@client_config.beneficiary_tax_number}<br>
+                          Address: #{@client_config.beneficiary_address}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr class="heading">
+                  <td>Bank Account Information</td>
+                  <td></td>
+                </tr>
+                <tr class="details">
+                  <td>Beneficiary Name: #{@client_config.bank_account_beneficiary_name}</td>
+                  <td></td>
+                </tr>
+                <tr class="details">
+                  <td>IBAN: #{@client_config.bank_account_iban}</td>
+                  <td></td>
+                </tr>
+                <tr class="details">
+                  <td>SWIFT Code: #{@client_config.bank_account_swift}</td>
+                  <td></td>
+                </tr>
+                <tr class="details">
+                  <td>Bank Name: #{@client_config.bank_name}</td>
+                  <td></td>
+                </tr>
+                <tr class="details">
+                  <td>Address: #{@client_config.bank_account_address}</td>
+                  <td></td>
+                </tr>
+                <tr class="heading">
+                  <td>Terms of Payment</td>
+                  <td></td>
+                </tr>
+                <tr class="details">
+                  <td>Due date: #{@invoice.due_date}</td>
+                  <td></td>
+                </tr>
+                <tr class="heading">
+                  <td>Description</td>
+                  <td>Amount</td>
+                </tr>
+                <tr class="item">
+                  <td>#{@client_config.service_description}</td>
+                  <td>#{@invoice.currency} #{formatted_amount}</td>
+                </tr>
+                <tr class="total">
+                  <td></td>
+                  <td>Total: #{@invoice.currency} #{formatted_amount}</td>
+                </tr>
+              </table>
+            </div>
+          </body>
+          </html>
+          HTML
+        end
+
+        def formatted_amount
+          number_to_currency(@invoice.amount)
+        end
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: lib/faktur/views/invoices/pdf.rb
+```
+# frozen_string_literal: true
+
+require "prawn"
+require "prawn/table"
+require "action_view"
+
+module Faktur
+  module Views
+    module Invoices
+      # PDF class
+      class PDF
+        include ActionView::Helpers
+
+        def initialize(invoice, client_config)
+          @invoice = invoice
+          @client_config = client_config
+        end
+
+        def render
+          Prawn::Document.new do |pdf|
+            pdf.font "Helvetica"
+
+            # Header
+            pdf.text "Invoice ##{@invoice.number}", size: 30, style: :bold, align: :center
+            pdf.move_down 20
+
+            # Client Information
+            pdf.text "Client Information", size: 20, style: :bold
+            pdf.stroke_horizontal_rule
+            pdf.move_down 10
+            pdf.text @client_config.client_name.to_s, size: 12
+            pdf.text @client_config.client_address.to_s, size: 12
+            pdf.text "VAT: #{@client_config.client_vat}", size: 12
+
+            pdf.move_down 20
+
+            # Beneficiary Information
+            pdf.text "Beneficiary Information", size: 20, style: :bold
+            pdf.stroke_horizontal_rule
+            pdf.move_down 10
+            pdf.text "Name: #{@client_config.beneficiary_name}", size: 12
+            pdf.text "Tax Number: #{@client_config.beneficiary_tax_number}", size: 12
+            pdf.text "Address: #{@client_config.beneficiary_address}", size: 12
+
+            pdf.move_down 20
+
+            # Bank Account Information
+            pdf.text "Bank Account Information", size: 20, style: :bold
+            pdf.stroke_horizontal_rule
+            pdf.move_down 10
+            pdf.text "Beneficiary Name: #{@client_config.bank_account_beneficiary_name}", size: 12
+            pdf.text "IBAN: #{@client_config.bank_account_iban}", size: 12
+            pdf.text "SWIFT Code: #{@client_config.bank_account_swift}", size: 12
+            pdf.text "Bank Name: #{@client_config.bank_name}", size: 12
+            pdf.text "Address: #{@client_config.bank_account_address}", size: 12
+
+            pdf.move_down 20
+
+            # Terms of payment
+            pdf.text "Terms of Payment", size: 20, style: :bold
+            pdf.stroke_horizontal_rule
+            pdf.move_down 10
+            pdf.text "Due date: #{@invoice.due_date}", size: 12
+
+            pdf.move_down 20
+
+            # Description Table
+            pdf.text "Description", size: 20, style: :bold
+            pdf.stroke_horizontal_rule
+            pdf.move_down 10
+            data = [["Service Description", "Amount"]] +
+                   [[@client_config.service_description, "#{@invoice.currency} #{formatted_amount}"]]
+            pdf.table(data, header: true, row_colors: %w[F0F0F0 FFFFFF], width: pdf.bounds.width) do
+              row(0).font_style = :bold
+              columns(1).align = :right
+            end
+
+            pdf.move_down 20
+
+            # Invoice Details
+            pdf.text "Invoice Details", size: 20, style: :bold
+            pdf.stroke_horizontal_rule
+            pdf.move_down 10
+            pdf.text "Issued at: #{@invoice.created_at}", size: 12
+            pdf.text "Total: #{@invoice.currency} #{formatted_amount}", size: 12
+            pdf.move_down 20
+          end.render
+        end
+
+        def formatted_amount
+          number_to_currency(@invoice.amount)
+        end
+      end
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: sig/faktur.rbs
+```
+module Faktur
+  VERSION: String
+  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur/commands/configurations_spec.rb
+```
+# frozen_string_literal: true
+
+require "thor"
+require "faktur/commands/configurations"
+require "faktur/data/configuration"
+
+RSpec.describe Faktur::Commands::Configurations do
+  let(:configurations) { described_class.new }
+
+  describe "#list" do
+    let(:configs) { [double("Config", id: 1, name: "Config 1"), double("Config", id: 2, name: "Config 2")] }
+
+    before do
+      allow(Faktur::Data::Configuration).to receive(:list).and_return(configs)
+      allow(configurations).to receive(:puts)
+    end
+
+    it "lists all configurations" do
+      configurations.list
+      configs.each do |config|
+        expect(configurations).to have_received(:puts).with("ID #{config.id} · #{config.name}")
+      end
+    end
+  end
+
+  describe "#list with no configurations" do
+    before do
+      allow(Faktur::Data::Configuration).to receive(:list).and_return([])
+      allow(configurations).to receive(:puts)
+    end
+
+    it "shows a message when there are no configurations" do
+      configurations.list
+      expect(configurations).to have_received(:puts).with("No configurations found")
+    end
+  end
+
+  describe "#show" do
+    let(:name) { "Test Configuration" }
+    let(:config) { double("Config", client_name: "Client Name", client_address: "Client Address") }
+    let(:attrs) { %i[client_name client_address] }
+
+    before do
+      stub_const("Faktur::Models::Configuration::ATTRS", attrs)
+      allow(Faktur::Data::Configuration).to receive(:find_by).with(name: name).and_return(config)
+      allow(configurations).to receive(:puts)
+    end
+
+    it "shows a configuration" do
+      configurations.show(name)
+      attrs.each do |attr|
+        expect(configurations).to have_received(:puts).with("#{attr.to_s.split("_").map(&:capitalize).join(" ")}: #{config.send(attr)}")
+      end
+    end
+  end
+
+  describe "#delete" do
+    let(:id) { 1 }
+
+    before do
+      allow(Faktur::Data::Configuration).to receive(:delete).with({ id: id })
+    end
+
+    it "deletes a configuration" do
+      configurations.delete(id)
+      expect(Faktur::Data::Configuration).to have_received(:delete).with({ id: id })
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur/commands/invoices_spec.rb
+```
+# frozen_string_literal: true
+
+require "thor"
+require "faktur/commands/invoices"
+require "faktur/data/invoice"
+require "faktur/data/configuration"
+require "faktur/models/invoice"
+require "faktur/views/invoices/pdf"
+
+RSpec.describe Faktur::Commands::Invoices do
+  let(:invoices) { described_class.new }
+
+  describe "#create" do
+    let(:input) do
+      {
+        client_name: "Client Name",
+        amount: "1000",
+        currency: "USD"
+      }
+    end
+    let(:client_config) { double("ClientConfig") }
+    let(:invoice) do
+      double("Invoice",
+             to_h: { client_name: "Client Name",
+                     amount: "1000",
+                     currency: "USD",
+                     number: "27" })
+    end
+
+    before do
+      allow(invoices).to receive(:ask).and_return(*input.values)
+      allow(Faktur::Data::Configuration)
+        .to receive(:find_by)
+        .with({ name: input[:client_name] })
+        .and_return(client_config)
+
+      allow(Faktur::Models::Invoice)
+        .to receive(:new)
+        .with(input, client_config: client_config, options: {})
+        .and_return(invoice)
+
+      allow(Faktur::Data::Invoice)
+        .to receive(:create)
+        .with(invoice.to_h)
+    end
+
+    it "creates a new invoice" do
+      invoices.create
+      expect(Faktur::Data::Invoice).to have_received(:create).with(invoice.to_h)
+    end
+  end
+
+  describe "#list" do
+    let(:invoice_list) do
+      [double("Invoice",
+              id: 1,
+              client_name: "Client 1",
+              amount: "1000",
+              currency: "USD",
+              created_at: "2023-01-01",
+              number: "27")]
+    end
+
+    before do
+      allow(Faktur::Data::Invoice).to receive(:list).and_return(invoice_list)
+      allow(invoices).to receive(:puts)
+    end
+
+    it "lists all invoices" do
+      invoices.list
+      invoice_list.each do |_invoice|
+        expect(invoices).to have_received(:puts).with(/ID/)
+      end
+    end
+  end
+
+  describe "#list when there are no invoices" do
+    before do
+      allow(Faktur::Data::Invoice).to receive(:list).and_return([])
+      allow(invoices).to receive(:puts)
+    end
+
+    it "lists all invoices" do
+      invoices.list
+      expect(invoices).to have_received(:puts).with("No invoices found")
+    end
+  end
+
+  describe "#print" do
+    let(:id) { 1 }
+    let(:invoice) { double("Invoice", id: id, client_id: 1) }
+    let(:client_config) { double("ClientConfig") }
+    let(:pdf) { double("PDF", render: "pdf_content") }
+
+    before do
+      allow(Faktur::Data::Invoice).to receive(:find_by).with({ id: id }).and_return(invoice)
+      allow(Faktur::Data::Configuration).to receive(:find_by).with({ id: invoice.client_id }).and_return(client_config)
+      allow(Faktur::Views::Invoices::PDF).to receive(:new).with(invoice, client_config).and_return(pdf)
+      allow(File).to receive(:open).with("invoice.pdf", "wb")
+    end
+
+    it "prints an invoice" do
+      invoices.print(id)
+      expect(File).to have_received(:open).with("invoice.pdf", "wb")
+    end
+  end
+
+  describe "#delete" do
+    let(:id) { 1 }
+
+    before do
+      allow(Faktur::Data::Invoice).to receive(:delete).with({ id: id })
+    end
+
+    it "deletes an invoice" do
+      invoices.delete(id)
+      expect(Faktur::Data::Invoice).to have_received(:delete).with({ id: id })
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur/data/configuration_spec.rb
+```
+# frozen_string_literal: true
+
+require "sqlite3"
+require_relative "../../../lib/faktur/data/configuration"
+require_relative "../../../lib/faktur/database"
+require_relative "../../../lib/faktur/models/configuration"
+
+RSpec.describe Faktur::Data::Configuration do
+  let(:db) { double("SQLite3::Database") }
+  let(:data) { { key: "value" } }
+  let(:table_name) { "configs" }
+
+  before do
+    allow(Faktur::Database).to receive(:setup)
+    allow(Faktur::Database).to receive(:create)
+    allow(Faktur::Database).to receive(:list).and_yield([])
+    allow(Faktur::Database).to receive(:delete)
+    allow(db).to receive(:execute)
+  end
+
+  describe ".create" do
+    it "sets up the database and creates a configuration" do
+      expect(Faktur::Database).to receive(:setup)
+      expect(Faktur::Database).to receive(:create).with(table_name, data)
+
+      described_class.create(data)
+    end
+  end
+
+  describe ".list" do
+    it "lists configurations" do
+      expect(Faktur::Database).to receive(:list).with(table_name, {})
+
+      described_class.list
+    end
+  end
+
+  describe ".find_by" do
+    it "finds a configuration by criteria" do
+      expect(described_class).to receive(:list).with({ key: "value" }).and_return([double])
+
+      described_class.find_by({ key: "value" })
+    end
+  end
+
+  describe ".delete" do
+    it "deletes a configuration by criteria" do
+      expect(Faktur::Database).to receive(:delete).with(table_name, { key: "value" })
+
+      described_class.delete({ key: "value" })
+    end
+  end
+
+  describe ".execute_update" do
+    it "executes an update on the database" do
+      expect(db).to receive(:execute).with(
+        "UPDATE #{table_name} SET key = ? WHERE id = ?",
+        ["value", 1]
+      )
+
+      described_class.execute_update(db, table_name, 1, key: "value")
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur/data/invoice_spec.rb
+```
+# frozen_string_literal: true
+
+require "spec_helper"
+require "faktur/data/invoice"
+require "faktur/database"
+require "faktur/models/invoice"
+
+RSpec.describe Faktur::Data::Invoice do
+  let(:data) { { client_id: 1, amount: 1000, currency: "USD", invoice_date: "2023-10-01", due_date: "2023-10-15" } }
+  let(:where) { { client_id: 1 } }
+  let(:results) { [data] }
+
+  describe ".create" do
+    it "creates an invoice" do
+      expect(Faktur::Database).to receive(:create).with("invoices", data).and_yield
+      expect { described_class.create(data) }.to output("Invoice created successfully!\n").to_stdout
+    end
+  end
+
+  describe ".list" do
+    it "lists invoices" do
+      expect(Faktur::Database).to receive(:list).with("invoices", where).and_yield(results)
+      invoices = described_class.list(where)
+      expect(invoices.first).to be_a(Faktur::Models::Invoice)
+    end
+  end
+
+  describe ".find_by" do
+    it "finds an invoice by criteria" do
+      allow(described_class).to receive(:list).with(where).and_return(results.map { |row|
+        Faktur::Models::Invoice.new(row, from_rows: true)
+      })
+      invoice = described_class.find_by(where)
+      expect(invoice).to be_a(Faktur::Models::Invoice)
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur/database_spec.rb
+```
+# frozen_string_literal: true
+
+require "sqlite3"
+require "fileutils"
+
+RSpec.describe Faktur::Database do
+  let(:data) { { name: "Test", value: "123" } }
+  let(:db_dir) { "./spec/fixtures" }
+  let(:db_path) { "#{db_dir}/faktur.db" }
+  let(:table_name) { "test_table" }
+
+  before(:all) do
+    setup_queries = [
+      <<-SQL
+        CREATE TABLE IF NOT EXISTS test_table (
+          id INTEGER PRIMARY KEY,
+          name TEXT,
+          value TEXT
+        );
+      SQL
+    ]
+
+    Faktur::Database.setup("./spec/fixtures", setup_queries)
+  end
+
+  describe ".setup" do
+    it "creates the database file" do
+      expect(File).to exist(db_path)
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur/models/configuration_spec.rb
+```
+# frozen_string_literal: true
+
+require "spec_helper"
+
+# rubocop:disable Metrics/BlockLength
+RSpec.describe Faktur::Models::Configuration do
+  subject(:configuration) { described_class }
+
+  let(:attributes_hash) do
+    {
+      id: 1,
+      name: "TestConfig",
+      client_name: "Client Co.",
+      client_address: "1234 Elm Street",
+      client_vat: "123456789",
+      beneficiary_name: "Beneficiary Name",
+      beneficiary_tax_number: "987654321",
+      beneficiary_address: "4321 Oak Avenue",
+      bank_account_beneficiary_name: "Bank Beneficiary",
+      bank_account_address: "5678 Pine Blvd",
+      bank_account_iban: "IBAN1234567890",
+      bank_account_swift: "SWIFT12345",
+      bank_name: "Big Bank",
+      payment_terms: "30d",
+      service_description: "Consulting services",
+      invoice_numbering: "sequential"
+    }
+  end
+
+  let(:attributes_row) { attributes_hash.values }
+
+  describe "::ATTRS" do
+    it "is defined in the correct order" do
+      expected_order = %i[
+        id name client_name client_address client_vat beneficiary_name
+        beneficiary_tax_number beneficiary_address bank_account_beneficiary_name
+        bank_account_address bank_account_iban bank_account_swift bank_name
+        payment_terms service_description invoice_numbering
+      ]
+      expect(described_class::ATTRS).to eq(expected_order)
+    end
+  end
+
+  describe "#initialize" do
+    context "when initialized with a hash" do
+      it "assigns the correct attributes" do
+        config = described_class.new(attributes_hash)
+
+        attributes_hash.each do |key, value|
+          expect(config.send(key)).to eq(value)
+        end
+      end
+    end
+
+    context "when initialized from rows" do
+      it "assigns the correct attributes in order" do
+        config = described_class.new(attributes_row, from_rows: true)
+
+        described_class::ATTRS.each_with_index do |attr, index|
+          expect(config.send(attr)).to eq(attributes_row[index])
+        end
+      end
+    end
+  end
+end
+# rubocop:enable Metrics/BlockLength
+
+```
+
+
+---
+FILE_PATH: spec/faktur/models/invoice_spec.rb
+```
+# frozen_string_literal: true
+
+require "spec_helper"
+require_relative "../../../lib/faktur/models/invoice"
+
+RSpec.describe Faktur::Models::Invoice do
+  let(:attributes) do
+    {
+      id: 1,
+      client_id: 123,
+      client_name: "Test Client",
+      amount: 1000,
+      currency: "USD",
+      invoice_date: "2023-10-01",
+      due_date: "2023-10-15",
+      number: "INV-001",
+      created_at: Time.now
+    }
+  end
+
+  let(:client_config) do
+    double(
+      "ClientConfig",
+      client_name: "Test Client",
+      due_date: "2023-10-15",
+      next_invoice_number: "INV-001",
+      id: 123
+    )
+  end
+
+  describe "#initialize" do
+    context "when from_rows is false" do
+      it "initializes from input" do
+        invoice = described_class.new(attributes, client_config: client_config, from_rows: false)
+        expect(invoice.instance_variable_get(:@attributes)).to eq(attributes)
+        expect(invoice.instance_variable_get(:@client_config)).to eq(client_config)
+      end
+    end
+
+    context "when from_rows is true" do
+      it "initializes from rows" do
+        invoice = described_class.new(attributes.values, from_rows: true)
+        Faktur::Models::Invoice::ATTRS.each_with_index do |attr, index|
+          expect(invoice.instance_variable_get("@#{attr}")).to eq(attributes.values[index])
+        end
+      end
+    end
+  end
+
+  describe "#to_h" do
+    it "returns a hash representation of the invoice" do
+      invoice = described_class.new(attributes, client_config: client_config, from_rows: false)
+      expected_hash = {
+        client_name: "Test Client",
+        amount: 1000,
+        currency: "USD",
+        invoice_date: Time.now.strftime("%Y-%m-%d"),
+        due_date: "2023-10-15",
+        number: "INV-001",
+        client_id: 123
+      }
+      expect(invoice.to_h).to eq(expected_hash)
+    end
+  end
+
+  describe "#initialize_from_rows" do
+    it "sets instance variables from rows" do
+      invoice = described_class.new(attributes.values, from_rows: true)
+      Faktur::Models::Invoice::ATTRS.each_with_index do |attr, index|
+        expect(invoice.instance_variable_get("@#{attr}")).to eq(attributes.values[index])
+      end
+    end
+  end
+
+  describe "#initialize_from_input" do
+    it "sets @attributes and @client_config" do
+      invoice = described_class.new(attributes, client_config: client_config, from_rows: false)
+      expect(invoice.instance_variable_get(:@attributes)).to eq(attributes)
+      expect(invoice.instance_variable_get(:@client_config)).to eq(client_config)
+    end
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/faktur_spec.rb
+```
+# frozen_string_literal: true
+
+RSpec.describe Faktur do
+  it "has a version number" do
+    expect(Faktur::VERSION).not_to be nil
+  end
+end
+
+```
+
+
+---
+FILE_PATH: spec/fixtures/faktur.db
+```
+SQLite format 3   @                                                                     .v�   m m                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               �!!�ktabletest_tabletest_tableCREATE TABLE test_table (
+          id INTEGER PRIMARY KEY,
+          name TEXT,
+          value TEXT
+        )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+```
+
+
+---
+FILE_PATH: spec/spec_helper.rb
+```
+# frozen_string_literal: true
+
+require "faktur"
+
+RSpec.configure do |config|
+  # Enable flags like --only-failures and --next-failure
+  config.example_status_persistence_file_path = ".rspec_status"
+
+  # Disable RSpec exposing methods globally on `Module` and `main`
+  config.disable_monkey_patching!
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+end
+
+```
