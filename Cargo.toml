@@ -1,7 +1,20 @@
 [package]
 name = "repo2text"
-version = "0.1.0"
+version = "0.2.0"
+authors = ["Vicente Santos"]
+description = "A Rust CLI tool to extract and save repository file contents into a text file."
+homepage = "https://github.com/vicentedpsantos/repo2text"
+repository = "https://github.com/vicentedpsantos/repo2text"
+readme = "README.md"
+keywords = ["git", "cli", "repository", "file-extraction", "NLP"]
+categories = ["command-line-utilities", "development-tools"]
+license = "MIT OR Apache-2.0"
 edition = "2021"
+default-run = "repo2text"
+
+[[bin]]
+name = "repo2text"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.1", features = ["derive"] }
