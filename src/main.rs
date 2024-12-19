@@ -1,63 +1,96 @@
+use std::fs::{self, File};
+use std::io::{Read, Write};
+use std::path::{Path, PathBuf};
 use clap::Parser;
-use git2::{Repository, TreeWalkMode};
-use std::fs::File;
-use std::io::{BufWriter, Write};
-use std::path::Path;
 
-#[derive(Parser)]
-struct Cli {
-    /// Path to the repository
-    #[arg(short, long)]
-    repo: String,
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    /// Path to the root of the Git repository
+    #[clap(short, long, value_parser)]
+    repo: PathBuf,
 
-    /// Output file
-    #[arg(short, long, default_value = "repo_contents.txt")]
-    output: String,
+    /// Path to the output .txt file
+    #[clap(short, long, value_parser)]
+    output: PathBuf,
+
+    /// Directories to exclude from processing
+    #[clap(long, value_parser)]
+    excluding: Vec<PathBuf>,
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = Cli::parse();
+fn is_binary_file(path: &Path) -> bool {
+    if let Ok(mut file) = File::open(path) {
+        let mut buffer = [0; 512];
+        if let Ok(bytes_read) = file.read(&mut buffer) {
+            return buffer[..bytes_read].iter().any(|&byte| byte == 0);
+        }
+    }
+    false
+}
 
-    let repo = Repository::open(&args.repo)?;
-    let tree = repo.head()?.peel_to_tree()?;
-    let mut output_file = BufWriter::new(File::create(&args.output)?);
+fn is_image_file(path: &Path) -> bool {
+    if let Some(extension) = path.extension().and_then(|ext| ext.to_str()) {
+        let lower_ext = extension.to_lowercase();
+        matches!(
+            lower_ext.as_str(),
+            "jpg" | "jpeg" | "png" | "gif" | "bmp" | "tiff" | "webp" | "svg"
+        )
+    } else {
+        false
+    }
+}
 
-    tree.walk(TreeWalkMode::PreOrder, |root, entry| {
-        let full_path = Path::new(root).join(entry.name().unwrap_or_default());
-        if entry.kind() == Some(git2::ObjectType::Blob) {
-            if let Err(e) = append_file_content(&repo, &full_path.to_string_lossy(), &mut output_file) {
-                eprintln!("Failed to process {}: {}", full_path.to_string_lossy(), e);
+fn should_skip_file(path: &Path) -> bool {
+    is_binary_file(path) || is_image_file(path)
+}
+
+fn process_repository(repo_path: &Path, output_file: &mut File, repo_name: &str, excluding: &[PathBuf]) {
+    for entry in fs::read_dir(repo_path).expect("Failed to read directory") {
+        if let Ok(entry) = entry {
+            let path = entry.path();
+
+            if excluding.iter().any(|exclude| path.starts_with(exclude)) {
+                println!("Excluding path: {:?}", path);
+                continue;
+            }
+
+            if path.is_file() {
+                if should_skip_file(&path) {
+                    println!("Skipping file: {:?}", path);
+                } else {
+                    println!("Processing file: {:?}", path);
+                    if let Ok(contents) = fs::read_to_string(&path) {
+                        let relative_path = path.strip_prefix(repo_path).unwrap_or(&path);
+                        let full_relative_path = format!("{}/{}", repo_name, relative_path.display());
+                        writeln!(
+                            output_file,
+                            "---\nFILE_PATH: {}\n```\n{} ```\n",
+                            full_relative_path,
+                            contents
+                        )
+                        .expect("Failed to write to output file");
+                    } else {
+                        eprintln!("Failed to read file: {:?}", path);
+                    }
+                }
+            } else if path.is_dir() {
+                process_repository(&path, output_file, repo_name, excluding);
             }
         }
-
-        git2::TreeWalkResult::Ok
-    })?;
-
-    println!("Contents written to {}", args.output);
-    Ok(())
+    }
 }
 
-fn append_file_content(
-    repo: &Repository,
-    file_path: &str,
-    output: &mut BufWriter<File>,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let obj = repo.revparse_single("HEAD")?;
-    let tree = obj.peel_to_tree()?;
+fn main() {
+    let args = Args::parse();
 
-    if let Some(entry) = tree.get_path(Path::new(file_path)).ok() {
-        if let Ok(blob) = entry.to_object(repo).and_then(|obj| obj.peel_to_blob()) {
-            writeln!(output, "\n\n---")?;
-            writeln!(output, "FILE_PATH: {}", file_path)?;
-            writeln!(output, "```")?;
-            writeln!(output, "{}", String::from_utf8_lossy(blob.content()))?;
-            writeln!(output, "```")?;
-        } else {
-            eprintln!("Failed to resolve blob for file: {}", file_path);
-        }
-    } else {
-        eprintln!("File not found in tree: {}", file_path);
-    }
+    let repo_name = args.repo.file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("repository");
 
-    Ok(())
+    let mut output_file = File::create(&args.output).expect("Failed to create output file");
+
+    process_repository(&args.repo, &mut output_file, repo_name, &args.excluding);
+
+    println!("Repository processing completed. Output saved to {:?}", args.output);
 }

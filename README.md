@@ -31,12 +31,13 @@ cargo build --release
 Run `repo2text` with the following options:
 
 ```bash
-repo2text --repo <REPO_PATH> --output <OUTPUT_FILE>
+repo2text --repo <REPO_PATH> --output <OUTPUT_FILE> --excluding <EXCLUDED_DIR>
 ```
 
 ### Arguments:
-- `--repo`: Path to the root of the Git repository.
-- `--output`: Path to the output `.txt` file where the repository contents will be saved.
+- `--repo`: **required**. Path to the root of the Git repository.
+- `--output`: **required**. Path to the output `.txt` file where the repository contents will be saved.
+- `--excluding`: **optional**. Directory to exclude from the traversal. Can be used multiple times.
 
 ### Example
 
@@ -44,10 +45,17 @@ repo2text --repo <REPO_PATH> --output <OUTPUT_FILE>
 repo2text --repo ~/projects/faktur --output faktur.txt
 ```
 
+```bash
+repo2text --repo ~/projects/faktur \
+          --output ~/temp/faktur.txt \
+          --excluding ~/projects/faktur/spec/ \
+          --excluding ~/projects/faktur/.git/
+```
+
 This command will:
 1. Traverse the repository at `~/projects/faktur`.
-2. Read the contents of committed files.
-3. Save the following structured data to `faktur.txt`:
+2. Read the contents of committed files while excluding the specified directories.
+3. Save the structured data to `faktur.txt`.
 
 ### Output Format
 
