@@ -45,7 +45,7 @@ fn should_skip_file(path: &Path) -> bool {
     is_binary_file(path) || is_image_file(path)
 }
 
-fn process_repository(repo_path: &Path, output_file: &mut File, repo_name: &str, excluding: &[PathBuf]) {
+fn process_repository(repo_path: &Path, output_file: &mut File, excluding: &[PathBuf]) {
     for entry in fs::read_dir(repo_path).expect("Failed to read directory") {
         if let Ok(entry) = entry {
             let path = entry.path();
@@ -61,12 +61,11 @@ fn process_repository(repo_path: &Path, output_file: &mut File, repo_name: &str,
                 } else {
                     println!("Processing file: {:?}", path);
                     if let Ok(contents) = fs::read_to_string(&path) {
-                        let relative_path = path.strip_prefix(repo_path).unwrap_or(&path);
-                        let full_relative_path = format!("{}/{}", repo_name, relative_path.display());
+                        let absolute_path = path.canonicalize().unwrap_or(path.clone());
                         writeln!(
                             output_file,
-                            "---\nFILE_PATH: {}\n```\n{} ```\n",
-                            full_relative_path,
+                            "---\nFILE_PATH: {}\n```\n{}\n```\n",
+                            absolute_path.display(),
                             contents
                         )
                         .expect("Failed to write to output file");
@@ -75,7 +74,7 @@ fn process_repository(repo_path: &Path, output_file: &mut File, repo_name: &str,
                     }
                 }
             } else if path.is_dir() {
-                process_repository(&path, output_file, repo_name, excluding);
+                process_repository(&path, output_file, excluding);
             }
         }
     }
@@ -84,13 +83,9 @@ fn process_repository(repo_path: &Path, output_file: &mut File, repo_name: &str,
 fn main() {
     let args = Args::parse();
 
-    let repo_name = args.repo.file_name()
-        .and_then(|name| name.to_str())
-        .unwrap_or("repository");
-
     let mut output_file = File::create(&args.output).expect("Failed to create output file");
 
-    process_repository(&args.repo, &mut output_file, repo_name, &args.excluding);
+    process_repository(&args.repo, &mut output_file, &args.excluding);
 
     println!("Repository processing completed. Output saved to {:?}", args.output);
 }
